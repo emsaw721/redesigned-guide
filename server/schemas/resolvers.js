@@ -40,7 +40,24 @@ const resolvers = {
 
             return {token, user};
         },
-        login 
-    }
-}
+        login: async (parent, {email, password}) => {
+            const user = await User.findOne({email});
 
+            if(!user){
+                thow new AuthenticationError('Incorrect email');
+            }
+
+            const correctPw = await user.isCorrectPassword(password);
+
+            if(!correctPw) {
+                thow new AuthenticationError('Incorrect password');
+            }
+
+            const token = signToken(user);
+            return {token,user};
+
+        }
+    }
+};
+
+module.exports = resolvers; 
