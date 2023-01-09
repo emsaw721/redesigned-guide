@@ -25,7 +25,7 @@ const resolvers = {
             .select('-_v -password')
             .populate('books');
         },
-        books: async(parent, {username}) => {
+        savedBooks: async(parent, {username}) => {
             const params = username ? {username} : {};
             return Book.find(params).sort({createdAt: -1});
         },
@@ -34,29 +34,30 @@ const resolvers = {
         }
     },
     Mutation: {
-        addUser: async(parent, args) => {
-            const user = await User.create(args);
-            const token = signToken(user);
+        // addUser: async(parent, args) => {
+        //     const user = await User.create(args);
+        //     const token = signToken(user);
 
-            return {token, user};
-        },
+        //     return {token, user};
+        // },
         login: async (parent, {email, password}) => {
             const user = await User.findOne({email});
 
             if(!user){
-                thow new AuthenticationError('Incorrect email');
+                throw new AuthenticationError('Incorrect email');
             }
 
             const correctPw = await user.isCorrectPassword(password);
 
             if(!correctPw) {
-                thow new AuthenticationError('Incorrect password');
+                throw new AuthenticationError('Incorrect password');
             }
 
             const token = signToken(user);
             return {token,user};
 
         }
+
     }
 };
 
