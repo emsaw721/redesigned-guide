@@ -37,13 +37,19 @@ export const QUERY_USER = gql`
   }
 `;
 
-export const GET_ME = gql`
-  {
+export const QUERY_ME = gql`
+ {
     me {
       _id
       username
       email
       bookCount
+      books {
+        _id
+        title
+        author
+        createdAt
+      }
     }
   }
 `;
