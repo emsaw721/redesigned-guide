@@ -15,7 +15,7 @@ export const QUERY_BOOKS = gql`
 
 export const QUERY_BOOK = gql`
   query book($id: ID!) {
-    thought(bookId: $id) {
+    book(bookId: $id) {
       bookId
       title
       createdAt
@@ -37,7 +37,7 @@ export const QUERY_USER = gql`
   }
 `;
 
-export const GET_ME = gql`
+export const QUERY_ME = gql`
  {
     me {
       _id
