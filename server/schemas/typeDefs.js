@@ -36,7 +36,6 @@ type Mutation {
     saveBook(author: String!, description: String!, title: String!, bookId: String!, image: String, link: String): User
     removeBook(bookId: String!): User
 }
-
 `;
 
 module.exports = typeDefs; 
