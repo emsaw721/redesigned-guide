@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {useQuery, useMutation} from '@apollo/client'; 
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 
@@ -8,7 +9,10 @@ import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
-  const {loading, data} = useQuery(QUERY_ME);
+  const bookId = useParams();
+  const {loading, data} = useQuery(QUERY_ME, {
+    variables: {bookId: bookId},
+  });
   const [removeBook] = useMutation(REMOVE_BOOK);
   const userData = data?.me || {}; 
 
@@ -28,14 +32,6 @@ const SavedBooks = () => {
     try {
       await removeBook({
         variables: {bookId: bookId},
-        update: cache => {
-          const data = cache.readQuery({query: QUERY_ME});
-          const userDataCache = data.me;
-          const savedBooksCache = userDataCache.savedBooks;
-          const updatedBookCache = savedBooksCache.filter((book) => book.bookId !== bookId );
-          data.me.savedBooks = updatedBookCache;
-          cache.writeQuery({query: QUERY_ME, data: {data: {...data.me.savedBooks}}})
-        }
       });
         // upon success, remove book's id from localStorage
         removeBookId(bookId);
